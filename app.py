@@ -68,7 +68,7 @@ def echo_cmd(user, channel, client, text):
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"Hello, *{user}*. Thanks for your message, let me echo it back to you:\n"
+                    "text": f"Hello, <@{user}>. Thanks for your message, let me echo it back to you:\n"
                             f"> {text}"
                 }
             },
