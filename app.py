@@ -111,11 +111,29 @@ def reverse_echo(user, channel, client, text):
 
 def remind_cmd(user, channel, client, text):
     parse_time = [x for x in text.split(" ") if x.isdigit()]
-    if len(parse_time[0]) == 4:
+    if len(parse_time) > 0 and len(parse_time[0]) == 4:
         hour = int(parse_time[0][:2])
         minute = int(parse_time[0][2:])
         target_time = datetime.time(hour, minute)
         target_time_string = target_time.strftime("%H:%M")
+
+        msg = {
+            "ts": "",
+            "channel": channel,
+            "username": user,
+            "blocks": [
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"<@{user}>, I will send you a reminder at {target_time_string}."
+                    }
+                },
+            ],
+        }
+
+        send_msg(client, msg)
+
         while datetime.datetime.now().time() < target_time:
             time.sleep(3)
         msg = {
@@ -127,7 +145,7 @@ def remind_cmd(user, channel, client, text):
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": f"<@{user}>, this is your {target_time_string} reminder"
+                        "text": f"<@{user}>, this is your {target_time_string} reminder."
                     }
                 },
             ],
@@ -135,7 +153,22 @@ def remind_cmd(user, channel, client, text):
 
         send_msg(client, msg)
     else:
-        return unknown_cmd(user, channel, client)
+        msg = {
+            "ts": "",
+            "channel": channel,
+            "username": user,
+            "blocks": [
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"<@{user}>, If you wish to set a same-day reminder, please use the format `remind me HHMM`, for instance, to set a reminder for 2:00pm, use `remind me 1400`."
+                    }
+                },
+            ],
+        }
+
+        send_msg(client, msg)
 
 # when bot name is mentioned
 @app.event("app_mention")
