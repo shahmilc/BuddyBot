@@ -1,5 +1,7 @@
 import logging
 from slack_bolt import App
+import datetime
+import time
 
 # Initialize a Bolt for Python app
 app = App()
@@ -34,7 +36,7 @@ def unknown_cmd(user, channel, client):
                 "type": "section",
 			    "text": {
 				    "type": "mrkdwn",
-				    "text": f"Hello, *{user}*, I'm EchoBot. I can echo your messages back to you."
+				    "text": f"Hello, <@{user}>, I'm EchoBot. I can echo your messages back to you."
 			    }
 		    },
 		    {
@@ -98,7 +100,7 @@ def reverse_echo(user, channel, client, text):
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"The reverse of your message is:\n"
+                    "text": f"<@{user}>, the reverse of your message is:\n"
                             f"> {text[:21:-1]}"
                 }
             },
@@ -106,6 +108,34 @@ def reverse_echo(user, channel, client, text):
     }
 
     send_msg(client, msg)
+
+def remind_cmd(user, channel, client, text):
+    parse_time = [x for x in text.split(" ") if x.isdigit()]
+    if len(parse_time[0]) == 4:
+        hour = int(parse_time[0][:2])
+        minute = int(parse_time[0][2:])
+        target_time = datetime.time(hour, minute)
+        target_time_string = target_time.strftime("%H:%M")
+        while datetime.datetime.now().time() < target_time:
+            time.sleep(3)
+        msg = {
+            "ts": "",
+            "channel": channel,
+            "username": user,
+            "blocks": [
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"<@{user}>, this is your {target_time_string} reminder"
+                    }
+                },
+            ],
+        }
+
+        send_msg(client, msg)
+    else:
+        return unknown_cmd(user, channel, client)
 
 # when bot name is mentioned
 @app.event("app_mention")
@@ -124,6 +154,8 @@ def message(event, client):
         return reverse_echo(user_id, channel_id, client, text)
     elif text and "echo" in text:
         return echo_cmd(user_id, channel_id, client, text)
+    elif text and "remind me" in text:
+        return remind_cmd(user_id, channel_id, client, text)
     else:
         return unknown_cmd(user_id, channel_id, client)
 
