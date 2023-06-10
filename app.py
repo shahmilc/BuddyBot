@@ -2,6 +2,8 @@ import logging
 from slack_bolt import App
 import datetime
 import time
+import os
+import openai
 
 # Initialize a Bolt for Python app
 app = App()
@@ -46,6 +48,7 @@ def help_cmd(user, channel, client, bot_id):
 				    "text": f"Use `echo` to repeat your message, e.g. `<@{bot_id}> echo hello`.\n"
                             f"Use `revecho` to repeat the reverse of your message, e.g. `<@{bot_id}> revecho hello`.\n"
                             f"Use `remind me at` to set a same-day reminder, e.g. `<@{bot_id}> remind me at 1430`.\n"
+                            f"Use `gpt` to get a response powered by GPT-3.5, e.g. `<@{bot_id}> gpt What's your name?`.\n"
 			    }
 		    },
 		    {
@@ -179,6 +182,36 @@ def remind_cmd(user, channel, client, text):
 
         send_msg(client, msg)
 
+def gpt_cmd(user, channel, client, text):
+
+    openai.api_key = os.environ['OPENAI_API_KEY']
+
+    completion = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content" : "You’re a kind helpful bot assistant named BuddyBot in a Slack channel."},
+            {"role": "user", "content": ''.join(text.split()[1:])}
+        ]
+    )
+
+    reply = completion.choices[0].message.content
+
+    msg = {
+            "ts": "",
+            "channel": channel,
+            "username": user,
+            "blocks": [
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"<@{user}>, {reply}"
+                    }
+                },
+            ],
+        }
+    send_msg(client, msg)
+
 # when bot name is mentioned
 @app.event("app_mention")
 def message(event, client):
@@ -200,6 +233,8 @@ def message(event, client):
         return echo_cmd(user_id, channel_id, client, text)
     elif text and "remind me" in text:
         return remind_cmd(user_id, channel_id, client, text)
+    elif text and "gpt" in text:
+        return gpt_cmd(user_id, channel_id, client, text)
     else:
         return help_cmd(user_id, channel_id, client, bot_id)
 
