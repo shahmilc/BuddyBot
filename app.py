@@ -47,8 +47,9 @@ def help_cmd(user, channel, client, bot_id):
 				    "type": "mrkdwn",
 				    "text": f"Use `echo` to repeat your message, e.g. `<@{bot_id}> echo hello`.\n"
                             f"Use `revecho` to repeat the reverse of your message, e.g. `<@{bot_id}> revecho hello`.\n"
-                            f"Use `remind me at` to set a same-day reminder, e.g. `<@{bot_id}> remind me at 1430`.\n"
-                            f"Use `gpt` to get a response powered by GPT-3.5, e.g. `<@{bot_id}> gpt What's your name?`.\n"
+                            f"Use `remind me` to set a same-day reminder, e.g. `<@{bot_id}> remind me at 1430`.\n"
+                            f"Use `remind everyone` to ping everyone at a time, e.g. `<@{bot_id}> remind everyone at 1430`.\n"
+                            f"Use `gpt` to get a response powered by GPT-3.5, e.g. `<@{bot_id}> gpt What is life?`.\n"
 			    }
 		    },
 		    {
@@ -121,13 +122,20 @@ def reverse_echo(user, channel, client, text):
 
     send_msg(client, msg)
 
-def remind_cmd(user, channel, client, text):
+def remind_cmd(user, channel, client, text, bot_id):
     parse_time = [x for x in text.split(" ") if x.isdigit()]
     if len(parse_time) > 0 and len(parse_time[0]) == 4 and int(parse_time[0]) < 2400:
         hour = int(parse_time[0][:2])
         minute = int(parse_time[0][2:])
         target_time = datetime.time(hour, minute)
         target_time_string = target_time.strftime("%H:%M")
+
+        if text.split()[2] == "me":
+            body = f"<@{user}>, I will send you a reminder at {target_time_string}."
+        elif text.split()[2] == "everyone":
+            body = f"<@{user}>, I will send everyone a reminder at {target_time_string}."
+        else:
+            return help_cmd(user, channel, client, bot_id)
 
         msg = {
             "ts": "",
@@ -138,7 +146,7 @@ def remind_cmd(user, channel, client, text):
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": f"<@{user}>, I will send you a reminder at {target_time_string}."
+                        "text": body
                     }
                 },
             ],
@@ -148,6 +156,12 @@ def remind_cmd(user, channel, client, text):
 
         while datetime.datetime.now().time() < target_time:
             time.sleep(3)
+
+        if text.split()[2] == "me":
+            body = f"<@{user}>, this is your {target_time_string} reminder."
+        elif text.split()[2] == "everyone":
+            body = f"<!everyone>, this is your {target_time_string} reminder set by <@{user}>."
+        
         msg = {
             "ts": "",
             "channel": channel,
@@ -157,13 +171,14 @@ def remind_cmd(user, channel, client, text):
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": f"<@{user}>, this is your {target_time_string} reminder."
+                        "text": body
                     }
                 },
             ],
         }
 
         send_msg(client, msg)
+
     else:
         msg = {
             "ts": "",
@@ -182,6 +197,7 @@ def remind_cmd(user, channel, client, text):
 
         send_msg(client, msg)
 
+# Command to get a response from OpenAI gpt-3.5-turbo
 def gpt_cmd(user, channel, client, text):
 
     openai.api_key = os.environ['OPENAI_API_KEY']
@@ -210,6 +226,7 @@ def gpt_cmd(user, channel, client, text):
                 },
             ],
         }
+    
     send_msg(client, msg)
 
 # when bot name is mentioned
@@ -227,12 +244,14 @@ def message(event, client):
     text = event.get("text")
     bot_id = event.get("blocks")[0]["elements"][0]["elements"][0]["user_id"]
 
+    print(f"\n\n\n\n {event} \n\n\n\n")
+
     if text and "revecho" in text:
         return reverse_echo(user_id, channel_id, client, text)
     elif text and "echo" in text:
         return echo_cmd(user_id, channel_id, client, text)
-    elif text and "remind me" in text:
-        return remind_cmd(user_id, channel_id, client, text)
+    elif text and ("remind me" in text or "remind everyone" in text):
+        return remind_cmd(user_id, channel_id, client, text, bot_id)
     elif text and "gpt" in text:
         return gpt_cmd(user_id, channel_id, client, text)
     else:
