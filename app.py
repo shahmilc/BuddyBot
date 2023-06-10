@@ -18,7 +18,7 @@ def send_msg(client, msg):
     logger.info(f"Send the message at {response['ts']}")
 
 
-def unknown_cmd(user, channel, client):
+def help_cmd(user, channel, client):
     """
     Echo the command back
     :param user: user id
@@ -36,14 +36,17 @@ def unknown_cmd(user, channel, client):
                 "type": "section",
 			    "text": {
 				    "type": "mrkdwn",
-				    "text": f"Hello, <@{user}>, I'm EchoBot. I can echo your messages back to you."
+				    "text": f"Hello, <@{user}>, I'm BuddyBot. I can assist you in various ways."
+                            f"Use `@BuddyBot echo` to echo your message back to you, e.g. `@Buddybot echo hello`."
+                            f"Use `@BuddyBot revecho` to echo the reverse of your message back to you, e.g. `@Buddybot revecho hello`."
+                            f"Use `@BuddyBot remind me at` to set a same-day reminder, e.g. `@Buddybot remind me at 1430`."
 			    }
 		    },
 		    {
 			    "type": "section",
 			    "text": {
 				    "type": "mrkdwn",
-				    "text": "Try adding `echo` somewhere in your message."
+				    "text": "See this message again at any time by using `@BuddyBot help`."
 			}
 		}
         ],
@@ -190,7 +193,7 @@ def message(event, client):
     elif text and "remind me" in text:
         return remind_cmd(user_id, channel_id, client, text)
     else:
-        return unknown_cmd(user_id, channel_id, client)
+        return help_cmd(user_id, channel_id, client)
 
 
 if __name__ == "__main__":
