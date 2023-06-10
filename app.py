@@ -111,7 +111,7 @@ def reverse_echo(user, channel, client, text):
 
 def remind_cmd(user, channel, client, text):
     parse_time = [x for x in text.split(" ") if x.isdigit()]
-    if len(parse_time) > 0 and len(parse_time[0]) == 4:
+    if len(parse_time) > 0 and len(parse_time[0]) == 4 and int(parse_time[0]) < 2400:
         hour = int(parse_time[0][:2])
         minute = int(parse_time[0][2:])
         target_time = datetime.time(hour, minute)
