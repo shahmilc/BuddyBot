@@ -26,7 +26,7 @@ def help_cmd(user, channel, client, bot_id):
     :param user: user id
     :param channel: channel id
     :param client: slack client
-    :param text: text of the message
+    :param bot_id: id tag of bot itself
     :return: none
     """
     msg = {
@@ -274,8 +274,6 @@ def message(event, client):
     text = event.get("text")
     bot_id = event.get("blocks")[0]["elements"][0]["elements"][0]["user_id"]
 
-    print(f"\n\n\n\n {event} \n\n\n\n")
-
     if text and "revecho" in text:
         return reverse_echo(user_id, channel_id, client, text)
     elif text and "echo" in text:
@@ -290,6 +288,6 @@ def message(event, client):
 
 if __name__ == "__main__":
     logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     logger.addHandler(logging.StreamHandler())
     app.start(3000)  # port 3000
