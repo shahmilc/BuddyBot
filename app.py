@@ -18,7 +18,7 @@ def send_msg(client, msg):
     logger.info(f"Send the message at {response['ts']}")
 
 
-def help_cmd(user, channel, client):
+def help_cmd(user, channel, client, bot_id):
     """
     Echo the command back
     :param user: user id
@@ -36,19 +36,25 @@ def help_cmd(user, channel, client):
                 "type": "section",
 			    "text": {
 				    "type": "mrkdwn",
-				    "text": f"Hello, <@{user}>, I'm BuddyBot. I can assist you in various ways."
-                            f"Use `@BuddyBot echo` to echo your message back to you, e.g. `@Buddybot echo hello`."
-                            f"Use `@BuddyBot revecho` to echo the reverse of your message back to you, e.g. `@Buddybot revecho hello`."
-                            f"Use `@BuddyBot remind me at` to set a same-day reminder, e.g. `@Buddybot remind me at 1430`."
+				    "text": f"Hello, <@{user}>, I'm BuddyBot. I can assist you in various ways.\n"
+			    }
+		    },
+            {
+			    "type": "section",
+			    "text": {
+				    "type": "mrkdwn",
+				    "text": f"Use `echo` to repeat your message, e.g. `<@{bot_id}> echo hello`.\n"
+                            f"Use `revecho` to repeat the reverse of your message, e.g. `<@{bot_id}> revecho hello`.\n"
+                            f"Use `remind me at` to set a same-day reminder, e.g. `<@{bot_id}> remind me at 1430`.\n"
 			    }
 		    },
 		    {
 			    "type": "section",
 			    "text": {
 				    "type": "mrkdwn",
-				    "text": "See this message again at any time by using `@BuddyBot help`."
-			}
-		}
+				    "text": f"See this message again at any time by using `<@{bot_id}> help`."
+			    }
+		    }
         ],
     }
 
@@ -182,9 +188,11 @@ def message(event, client):
     :return: none
     """
 
+    # Get the id of the channel, user, bot, and the text of the message
     channel_id = event.get("channel")
     user_id = event.get("user")
     text = event.get("text")
+    bot_id = event.get("blocks")[0]["elements"][0]["elements"][0]["user_id"]
 
     if text and "revecho" in text:
         return reverse_echo(user_id, channel_id, client, text)
@@ -193,7 +201,7 @@ def message(event, client):
     elif text and "remind me" in text:
         return remind_cmd(user_id, channel_id, client, text)
     else:
-        return help_cmd(user_id, channel_id, client)
+        return help_cmd(user_id, channel_id, client, bot_id)
 
 
 if __name__ == "__main__":
