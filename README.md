@@ -1,4 +1,4 @@
-# BuddyBot
+# BuddyBot - Your Handy Assistant
 
 ---
 
