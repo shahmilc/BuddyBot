@@ -27,18 +27,20 @@ The `revecho` command lets you repeat the reverse of your message. Mention Buddy
 
 ![Revecho example](/assets/features/revecho.jpg)
 
+
 #### Remind Me
 The `remind me` command allows you to set a same-day reminder. Mention BuddyBot and include the keyword `remind me` followed by the time you want to be reminded. The time should be specified in a 24-hour format without spaces. For example:
 
 ![Remind me example](/assets/features/remindme.jpg)
 
-### Remind Everyone
+
+#### Remind Everyone
 The `remind everyone` command enables you to ping everyone in the channel at a specific time. Mention BuddyBot and include the keyword `remind everyone` followed by the desired time in a 24-hour format. For example:
 
 ![Remind everyone example](/assets/features/remindeveryone.jpg)
 
-### GPT
-The `gpt` command allows you to generate a response using the power of OpenAI's GPT-3.5. Mention BuddyBot and include the keyword `gpt` followed by your query or prompt. For example:
 
+#### GPT
+The `gpt` command allows you to generate a response using the power of OpenAI's GPT-3.5. Mention BuddyBot and include the keyword `gpt` followed by your query or prompt. For example:
 
 ![ChatGPT example](/assets/features/gpt.jpg)
