@@ -49,8 +49,11 @@ def help_cmd(user, channel, client, bot_id):
                             f"Use `revecho` to repeat the reverse of your message, e.g. `<@{bot_id}> revecho hello`.\n"
                             f"Use `remind me` to set a same-day reminder, e.g. `<@{bot_id}> remind me at 1430`.\n"
                             f"Use `remind everyone` to ping everyone at a time, e.g. `<@{bot_id}> remind everyone at 1430`.\n"
-                            f"Use `gpt` to get a response powered by GPT-3.5, e.g. `<@{bot_id}> gpt What is life?`.\n"
+                            f"Use `gpt` to get a response powered by GPT-3.5, e.g. `<@{bot_id}> gpt What is life?`."
 			    }
+		    },
+            {
+			    "type": "divider"
 		    },
 		    {
 			    "type": "section",
@@ -84,19 +87,9 @@ def echo_cmd(user, channel, client, text):
                 "text": {
                     "type": "mrkdwn",
                     "text": f"Hello, <@{user}>. Thanks for your message, let me echo it back to you:\n"
-                            f"> {text}"
+                            f"> {''.join(text.split()[2:])}"
                 }
-            },
-            {
-			    "type": "divider"
-		    },
-            {
-			    "type": "section",
-			    "text": {
-				    "type": "mrkdwn",
-				    "text": "I can also echo the reverse of your message, trying adding `revecho` somewhere in your message."
-			    }
-		    }
+            }
         ],
     }
 
@@ -143,7 +136,7 @@ def remind_cmd(user, channel, client, text):
     # Find the time in the message in the format HHMM
     parse_time = [x for x in text.split(" ") if x.isdigit()]
 
-    # Make sure the time code is appropriate
+    # Make sure the time code is valid
     if len(parse_time) > 0 and len(parse_time[0]) == 4 and int(parse_time[0]) < 2400:
 
         hour = int(parse_time[0][:2])
@@ -235,7 +228,10 @@ def gpt_cmd(user, channel, client, text):
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
+            # Context information for the model
             {"role": "system", "content" : "You’re a kind helpful bot assistant named BuddyBot in a Slack channel."},
+
+            # Send the user's message sans '@BuddyBot'
             {"role": "user", "content": ''.join(text.split()[1:])}
         ]
     )
