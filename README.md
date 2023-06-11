@@ -1,4 +1,4 @@
-<img src="assets/BuddyBot.jpg" width="200" height="200">
+<img src="assets/banner.png">
 
 # BuddyBot - Your Handy Assistant
 
