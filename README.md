@@ -1,6 +1,6 @@
-<img src="assets/banner.png">
+![BuddyBot Banner!](/assets/banner.png")
 
-# BuddyBot - Your Handy Assistant
+Your Handy, GPT3.5-turbo Capable, Assistant
 
 ---
 
