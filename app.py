@@ -275,7 +275,7 @@ def message(event, client):
     elif text and "echo" in text:
         return echo_cmd(user_id, channel_id, client, text)
     elif text and ("remind me" in text or "remind everyone" in text):
-        return remind_cmd(user_id, channel_id, client, text, bot_id)
+        return remind_cmd(user_id, channel_id, client, text)
     elif text and "gpt" in text:
         return gpt_cmd(user_id, channel_id, client, text)
     else:
