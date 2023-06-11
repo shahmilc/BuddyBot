@@ -1,1 +1,5 @@
 # BuddyBot
+
+---
+
+A bot
