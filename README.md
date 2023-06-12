@@ -55,13 +55,16 @@ To view a list of the available commands, mention BuddyBot and include the keywo
 ## Installation
 BuddyBot uses an [Incoming Webhook](https://api.slack.com/messaging/webhooks) in the Slack API and requires a public HTTP endpoint.
 
- To install BuddyBot in your Slack channel, you need to follow these steps:
+BuddyBot's GPT feature also requires an [OpenAI API Key](https://platform.openai.com/account/api-keys).
+
+To install BuddyBot in your Slack channel, you need to follow these steps:
 
 1. Create a new Slack App in your workspace.
 2. Enable the necessary permissions and scopes for the bot to interact with the channels.
 3. Generate an access token for the bot.
-4. Deploy the BuddyBot code to a server or cloud platform, or start a local proxy using [ngrok](https://ngrok.com/).
-5. Set up the appropriate event subscriptions and request URL to receive events from Slack.
-6. Install the BuddyBot app to your desired channel.
+4. Generate an OpenAI API Key and set it as an environment variable named `OPENAI_API_KEY`, or provide it to the program in some other way.
+5. Deploy the BuddyBot code to a server or cloud platform, or start a local proxy using [ngrok](https://ngrok.com/).
+6. Set up the appropriate event subscriptions and request URL to receive events from Slack.
+7. Install the BuddyBot app to your desired channel.
 
 Find more detailed information in Slack's [documentation.](https://api.slack.com/start/building/bolt-python)
