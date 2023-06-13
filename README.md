@@ -63,7 +63,7 @@ To install BuddyBot in your Slack channel, you need to follow these steps:
 2. Enable the necessary permissions and scopes for the bot to interact with the channels.
 3. Generate an access token for the bot.
 4. Generate an OpenAI API Key and set it as an environment variable named `OPENAI_API_KEY`, or provide it to the program in some other way.
-5. Deploy the BuddyBot code to a server or cloud platform, or start a local proxy using [ngrok](https://ngrok.com/).
+5. Deploy the BuddyBot code to a server or cloud platform, or use a tunnelling service during development like [ngrok](https://ngrok.com/).
 6. Set up the appropriate event subscriptions and request URL to receive events from Slack.
 7. Install the BuddyBot app to your desired channel.
 
